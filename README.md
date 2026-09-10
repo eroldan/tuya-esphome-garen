@@ -3,6 +3,6 @@ Esphome configuration, using tuya serial protocol, for brazilian "Garen" door co
 
 
 # Hardware
-Tested on "Garen TSI-Fit" https://garen.com.br/produto/central-tsi-fit/
+Tested on [Garen TSI-Fit](https://garen.com.br/produto/central-tsi-fit/) and [WT32-ETH01](https://en.wireless-tag.com/product-item-2.html)
 
 ![Picture of working setup](pic1.jpg)
