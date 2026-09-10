@@ -1,0 +1,99 @@
+substitutions:
+  devname: esp-door01
+  long_devname: door01
+  
+esphome:
+  name: ${devname}
+
+esp32:
+  board: esp-wrover-kit
+  framework:
+    type: esp-idf
+    
+logger:
+  baud_rate: 0 # Disable serial log (may help prevent Tuya problems)
+  #level: VERBOSE
+
+api:
+  encryption:
+    key: "?????????????????"
+
+web_server:
+  port: 80
+
+ota:
+  platform: esphome
+  password: "??????????????????"
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk:
+    pin: GPIO0
+    mode: CLK_EXT_IN
+  phy_addr: 1
+  power_pin: GPIO16
+  domain: .lan
+
+uart:
+  - id: uart01
+    rx_pin: 5
+    tx_pin: 17
+    baud_rate: 9600
+    rx_buffer_size: 1024
+    debug:
+      direction: BOTH
+
+time:
+  - platform: homeassistant
+    id: ha_time
+    
+tuya:
+  uart_id: uart01
+  
+switch:
+  - platform: "tuya"
+    name: "Gate Action"
+    id: gate_action
+    switch_datapoint: 101
+    internal: true
+
+button:
+  - platform: template
+    name: "Door button"
+    on_press:
+      - switch.toggle : gate_action
+
+  - platform: restart
+    name: "Reboot"
+    entity_category: diagnostic    
+
+binary_sensor:
+  - platform: "tuya"
+    name: "Door"
+    sensor_datapoint: 3
+    device_class: garage_door
+
+  - platform: "tuya"
+    name: "Motor"
+    sensor_datapoint: 1
+    device_class: moving
+
+sensor:
+  - platform: uptime
+    name: "Uptime"
+    id: uptime_seconds
+    type: seconds
+    update_interval: 30s
+    entity_category: diagnostic
+
+  - platform: uptime
+    name: "Last Boot"
+    type: timestamp
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: uptime
+    name: "Uptime - Human"
+    entity_category: diagnostic
